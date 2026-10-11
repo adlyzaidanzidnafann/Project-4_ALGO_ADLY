@@ -1,1 +1,257 @@
 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aplikasi Penghitung Luas</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #101827, #203b63);
+      color: white;
+      min-height: 100vh;
+      padding: 24px 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 430px;
+      background: #ffffff;
+      color: #1e293b;
+      padding: 26px;
+      border-radius: 22px;
+      box-shadow: 0 15px 40px #0004;
+    }
+
+    .icon {
+      font-size: 45px;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #64748b;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .formula {
+      background: #eff6ff;
+      color: #1d4ed8;
+      text-align: center;
+      padding: 15px;
+      border-radius: 12px;
+      font-weight: bold;
+      margin-bottom: 22px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 16px;
+      margin-bottom: 18px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px #2563eb20;
+    }
+
+    button {
+      width: 100%;
+      border: none;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+
+    .calculate {
+      background: #2563eb;
+      color: white;
+    }
+
+    .reset {
+      background: #e2e8f0;
+      color: #334155;
+    }
+
+    .result {
+      display: none;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      padding: 18px;
+      border-radius: 12px;
+      text-align: center;
+      margin-top: 12px;
+    }
+
+    .result p {
+      color: #047857;
+      font-size: 14px;
+    }
+
+    .result h2 {
+      color: #065f46;
+      font-size: 30px;
+      margin: 8px 0;
+      overflow-wrap: anywhere;
+    }
+
+    .message {
+      color: #dc2626;
+      font-size: 13px;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    footer {
+      text-align: center;
+      color: #94a3b8;
+      font-size: 12px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <div class="icon">📐</div>
+
+    <h1>Hitung Luas Persegi Panjang</h1>
+
+    <p class="subtitle">
+      Masukkan panjang dan lebar untuk menghitung
+      luas persegi panjang secara otomatis.
+    </p>
+
+    <div class="formula">
+      Luas = Panjang × Lebar
+    </div>
+
+    <form id="formLuas">
+      <label for="panjang">Panjang</label>
+      <input
+        type="number"
+        id="panjang"
+        placeholder="Contoh: 10"
+        min="0.000001"
+        step="any"
+        required
+      >
+
+      <label for="lebar">Lebar</label>
+      <input
+        type="number"
+        id="lebar"
+        placeholder="Contoh: 5"
+        min="0.000001"
+        step="any"
+        required
+      >
+
+      <p class="message" id="pesan" role="alert"></p>
+
+      <button class="calculate" type="submit">
+        Hitung Luas
+      </button>
+
+      <button class="reset" type="reset">
+        Reset
+      </button>
+    </form>
+
+    <section class="result" id="hasil" aria-live="polite">
+      <p>Hasil perhitungan luas:</p>
+      <h2 id="nilaiLuas">0</h2>
+      <p id="detail"></p>
+    </section>
+
+    <footer>
+      Aplikasi Algoritma dan Pemrograman
+    </footer>
+  </main>
+
+  <script>
+    const form = document.getElementById("formLuas");
+    const inputPanjang = document.getElementById("panjang");
+    const inputLebar = document.getElementById("lebar");
+    const hasil = document.getElementById("hasil");
+    const nilaiLuas = document.getElementById("nilaiLuas");
+    const detail = document.getElementById("detail");
+    const pesan = document.getElementById("pesan");
+
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const panjang = inputPanjang.valueAsNumber;
+      const lebar = inputLebar.valueAsNumber;
+
+      if (
+        !Number.isFinite(panjang) ||
+        !Number.isFinite(lebar) ||
+        panjang <= 0 ||
+        lebar <= 0
+      ) {
+        pesan.textContent =
+          "Masukkan panjang dan lebar berupa angka lebih dari nol.";
+        hasil.style.display = "none";
+        return;
+      }
+
+      // Proses perhitungan luas
+      const luas = panjang * lebar;
+
+      // Menampilkan hasil
+      nilaiLuas.textContent =
+        luas.toLocaleString("id-ID", {
+          maximumFractionDigits: 10
+        }) + " satuan²";
+
+      detail.textContent =
+        panjang + " × " + lebar + " = " +
+        luas.toLocaleString("id-ID");
+
+      pesan.textContent = "";
+      hasil.style.display = "block";
+    });
+
+    form.addEventListener("reset", function() {
+      pesan.textContent = "";
+      hasil.style.display = "none";
+    });
+  </script>
+</body>
+</html>
+
